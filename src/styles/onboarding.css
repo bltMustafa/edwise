@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap");
+
+:root {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --primary-color: #5f27cd;
+  --secondary-color: #10ac84;
+  --text-color: #2f3542;
+  --light-text: #ffffff;
+
+  --primary-font: "Inter", sans-serif;
+  --secondary-font: "Plus Jakarta Sans", sans-serif;
+}
+
+.onboarding-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.onboarding-card {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.step-icon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  opacity: 0.9;
+  color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+}
+
+.onboarding-title {
+  margin-bottom: 12px;
+  color: var(--primary-color);
+  font-size: 2.2rem;
+}
+
+.onboarding-paragraph {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.onboarding-details {
+  color: var(--text-color);
+  margin-bottom: 30px;
+  font-size: 1rem;
+  line-height: 1.6;
+  display: block;
+  text-align: center;
+}
+
+.navigation-button-ghost {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  padding: 0 30px;
+  height: 45px;
+}
+
+.navigation-button-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  padding: 0 30px;
+  height: 45px;
+}
+
+.navigation-button-secondary {
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+  padding: 0 30px;
+  height: 45px;
+}
+
