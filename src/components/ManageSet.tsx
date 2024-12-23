@@ -1,6 +1,8 @@
-import React, {useState} from "react";
-import {Card, Input, Button, List, Typography, message} from "antd";
-import {PlusOutlined, PlayCircleOutlined} from "@ant-design/icons";
+import React, {useState, useEffect} from "react";
+import {Card, Input, Button, List, Typography, message, Tooltip} from "antd";
+import {
+  PlusOutlined, PlayCircleOutlined, DeleteOutlined,
+} from "@ant-design/icons";
 import {WordSet, Word} from "../constants/types";
 
 
@@ -15,6 +17,10 @@ interface ManageSetProps {
   setCurrentStep: React.Dispatch<React.SetStateAction<"sets" | "manage" | "play" | "results">>;
 }
 
+
+const saveToLocalStorage = (wordSets: WordSet[]) => {
+  localStorage.setItem("wordSets", JSON.stringify(wordSets));
+};
 
 const ManageSet: React.FC<ManageSetProps> = ({currentSet, wordSets, setWordSets, setCurrentSet, setCurrentStep}) => {
   const [newWord, setNewWord] = useState<Word>({english: "", turkish: ""});
@@ -32,11 +38,32 @@ const ManageSet: React.FC<ManageSetProps> = ({currentSet, wordSets, setWordSets,
       words: [...currentSet.words, {english: english.trim(), turkish: turkish.trim()}],
     };
 
-    setWordSets(wordSets.map(set => set.id === currentSet.id ? updatedSet : set));
+    const updatedWordSets = wordSets.map(set => (set.id === currentSet.id ? updatedSet : set));
+
+    setWordSets(updatedWordSets);
+    saveToLocalStorage(updatedWordSets);
     setCurrentSet(updatedSet);
     setNewWord({english: "", turkish: ""});
     message.success("Word added successfully!");
   };
+
+  useEffect(() => {
+    const savedSets = localStorage.getItem("wordSets");
+    if (savedSets) {
+      setWordSets(JSON.parse(savedSets));
+    }
+  }, [setWordSets]);
+
+  const handleDelete = (indexToRemove) => {
+    const updatedWords = currentSet.words.filter((_, index) => index !== indexToRemove);
+    const updatedSet = {...currentSet, words: updatedWords};
+    const updatedWordSets = wordSets.map(set => (set.id === currentSet.id ? updatedSet : set));
+
+    setCurrentSet(updatedSet);
+    setWordSets(updatedWordSets);
+    saveToLocalStorage(updatedWordSets);
+  };
+
 
   return (
     <Card
@@ -59,12 +86,7 @@ const ManageSet: React.FC<ManageSetProps> = ({currentSet, wordSets, setWordSets,
           onChange={(e) => setNewWord({...newWord, turkish: e.target.value})}
           style={{width: "45%"}}
         />
-        <Button
-          type="primary"
-          icon={<PlusOutlined/>}
-          onClick={addWordToSet}
-          style={{marginLeft: 10}}
-        >
+        <Button type="primary" icon={<PlusOutlined/>} onClick={addWordToSet} style={{marginLeft: 10}}>
           Add Word
         </Button>
       </div>
@@ -73,12 +95,25 @@ const ManageSet: React.FC<ManageSetProps> = ({currentSet, wordSets, setWordSets,
         bordered
         dataSource={currentSet.words}
         renderItem={(word, index) => (
-          <List.Item>
-            <Text strong>{index + 1}. {word.english}</Text> - {word.turkish}
+          <List.Item
+            actions={[
+              <Tooltip key="delete" title="Delete Word">
+                <DeleteOutlined
+                  style={{color: "red", cursor: "pointer"}}
+                  onClick={() => handleDelete(index)}
+                />
+              </Tooltip>,
+            ]}
+            key={index}
+            style={{cursor: "pointer"}}
+          >
+            <Text strong>
+              {index + 1}. {word.english}
+            </Text>{" "}
+            - {word.turkish}
           </List.Item>
         )}
       />
-
       <div style={{marginTop: 20, textAlign: "center"}}>
         <Button
           type="primary"

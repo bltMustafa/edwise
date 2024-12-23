@@ -1,6 +1,11 @@
-import React, {Dispatch, SetStateAction} from "react";
-import {Card, Input, Button, List, Empty, Tooltip, message} from "antd";
-import {BookOutlined, PlayCircleOutlined, PlusOutlined, DeleteOutlined} from "@ant-design/icons";
+import React, {Dispatch, SetStateAction, useEffect} from "react";
+import {Card, Input, Button, List, Empty, Tooltip, message, Select} from "antd";
+import {
+  BookOutlined,
+  PlayCircleOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import {WordSet} from "../constants/types";
 
 
@@ -13,11 +18,22 @@ interface SetsListProps {
 
 
 const SetsList: React.FC<SetsListProps> = ({wordSets, setWordSets, setCurrentSet, setCurrentStep}) => {
-
   const [newSetName, setNewSetName] = React.useState("");
+  const [newSetDifficulty, setNewSetDifficulty] = React.useState<"easy" | "medium" | "hard">("easy");
+
+  useEffect(() => {
+    const savedSets = localStorage.getItem("wordSets");
+    if (savedSets) {
+      try {
+        const parsedSets = JSON.parse(savedSets);
+        setWordSets(parsedSets);
+      } catch (error) {
+        console.error("Error parsing LocalStorage data:", error);
+      }
+    }
+  }, [setWordSets]);
 
   const addWordSet = () => {
-
     if (!newSetName.trim()) {
       message.warning("Please enter a set name");
       return;
@@ -27,33 +43,40 @@ const SetsList: React.FC<SetsListProps> = ({wordSets, setWordSets, setCurrentSet
       id: Math.random().toString(36).substr(2, 9),
       name: newSetName.trim(),
       words: [],
-      difficulty: "medium",
+      difficulty: newSetDifficulty,
     };
-    setWordSets([...wordSets, newSet]);
+
+    const updatedWordSets = [...wordSets, newSet];
+    setWordSets(updatedWordSets);
+    localStorage.setItem("wordSets", JSON.stringify(updatedWordSets));
     setNewSetName("");
     message.success("Set created successfully!");
   };
 
   return (
     <Card
-      title={
-        <div>
-          <BookOutlined/> Word Learning Sets
-        </div>
-      }
+      title={<div><BookOutlined/> Word Learning Sets</div>}
       extra={
-        <div style={{display: "flex", alignItems: "center"}}>
+        <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
           <Input
             placeholder="New Set Name"
             value={newSetName}
             onChange={(e) => setNewSetName(e.target.value)}
-            style={{width: 200, marginRight: 10}}
+            style={{width: 200}}
           />
-          <Tooltip title="Create New Word Set">
-            <Button type="primary" icon={<PlusOutlined/>} onClick={addWordSet}>
-              Add Set
-            </Button>
-          </Tooltip>
+          <Select
+            defaultValue="easy"
+            value={newSetDifficulty}
+            style={{width: 120}}
+            onChange={(value) => setNewSetDifficulty(value as "easy" | "medium" | "hard")}
+          >
+            <Select.Option value="easy">Easy</Select.Option>
+            <Select.Option value="medium">Medium</Select.Option>
+            <Select.Option value="hard">Hard</Select.Option>
+          </Select>
+          <Button type="primary" icon={<PlusOutlined/>} onClick={addWordSet}>
+            Add Set
+          </Button>
         </div>
       }
     >
@@ -91,7 +114,11 @@ const SetsList: React.FC<SetsListProps> = ({wordSets, setWordSets, setCurrentSet
                    <Tooltip key="delete" title="Delete Set">
                      <DeleteOutlined
                        style={{color: "red"}}
-                       onClick={() => setWordSets(wordSets.filter((s) => s.id !== set.id))}
+                       onClick={() => {
+                         const updatedSets = wordSets.filter((s) => s.id !== set.id);
+                         setWordSets(updatedSets);
+                         localStorage.setItem("wordSets", JSON.stringify(updatedSets));
+                       }}
                      />
                    </Tooltip>,
                  ]}
@@ -103,9 +130,8 @@ const SetsList: React.FC<SetsListProps> = ({wordSets, setWordSets, setCurrentSet
          />
        )}
     </Card>
+
   );
-
-
 };
 
 export default SetsList;

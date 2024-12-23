@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Card, Input, Button, Progress, Typography} from "antd";
 import {PlayCircleOutlined, BookOutlined, TranslationOutlined} from "@ant-design/icons";
 import {WordSet, GameState} from "../constants/types";
@@ -15,8 +15,29 @@ interface PlayViewProps {
 }
 
 
+const shuffleArray = (array: any[]) => {
+  return array.sort(() => Math.random() - 0.5);
+};
+
 const PlayView: React.FC<PlayViewProps> = ({currentSet, gameState, setGameState, setCurrentStep}) => {
-  const currentWord = currentSet.words[gameState.currentWordIndex];
+  useEffect(() => {
+    if (currentSet?.words?.length) {
+      const shuffledWords = shuffleArray([...currentSet.words]);
+      setGameState((prevState) => ({
+        ...prevState,
+        currentWordIndex: 0,
+        results: [],
+        shuffledWords,
+      }));
+    }
+  }, [currentSet, setGameState]);
+
+
+  if (!gameState.shuffledWords || gameState.shuffledWords.length === 0) {
+    return <div>No words available in this set. Please add words to start the game.</div>;
+  }
+
+  const currentWord = gameState.shuffledWords[gameState.currentWordIndex];
 
   const submitGuess = () => {
     const isCorrect = gameState.userGuess.trim().toLowerCase() === currentWord.turkish.toLowerCase();
@@ -27,19 +48,16 @@ const PlayView: React.FC<PlayViewProps> = ({currentSet, gameState, setGameState,
 
     const nextWordIndex = gameState.currentWordIndex + 1;
 
-    if (nextWordIndex < currentSet.words.length) {
+    if (nextWordIndex >= gameState.shuffledWords.length) {
+      setGameState({...gameState, results: updatedResults});
+      setCurrentStep("results");
+    } else {
       setGameState({
         ...gameState,
         currentWordIndex: nextWordIndex,
         userGuess: "",
         results: updatedResults,
       });
-    } else {
-      setGameState({
-        ...gameState,
-        results: updatedResults,
-      });
-      setCurrentStep("results");
     }
   };
 
@@ -50,10 +68,15 @@ const PlayView: React.FC<PlayViewProps> = ({currentSet, gameState, setGameState,
           <TranslationOutlined/> Translate the Word
         </Title>
         <Progress
-          percent={((gameState.currentWordIndex + 1) / currentSet.words.length) * 100}
+          percent={
+            gameState.shuffledWords.length > 0
+            ? Math.round(((gameState.currentWordIndex + 1) / gameState.shuffledWords.length) * 100)
+            : 0
+          }
           status="active"
           style={{marginBottom: 20}}
         />
+
         <Card
           style={{
             width: 300,
@@ -71,7 +94,7 @@ const PlayView: React.FC<PlayViewProps> = ({currentSet, gameState, setGameState,
           placeholder="Type the Turkish translation"
           value={gameState.userGuess}
           onChange={(e) => setGameState({...gameState, userGuess: e.target.value})}
-          style={{width: 300, margin: "0 auto 20px"}}
+          style={{width: 300, margin: "0 12px 20px"}}
           prefix={<BookOutlined/>}
         />
         <Button
