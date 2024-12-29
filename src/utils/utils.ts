@@ -43,7 +43,7 @@ export const exportToCSV = (wordSets: WordSet[]) => {
   const csvRows = ["id,name,difficulty,english,turkish"];
   wordSets.forEach((set) => {
     set.words.forEach((word) => {
-      csvRows.push(`${set.id},"${set.name}",${set.difficulty},${word.english},${word.turkish}`);
+      csvRows.push(`${set.id},"${set.name}",${word.english},${word.turkish}`);
     });
   });
 
@@ -69,15 +69,15 @@ export const importFromCSV = (
   reader.onload = (event) => {
     try {
       const text = event.target?.result as string;
-      const rows = text.split("\n").slice(1); // İlk satır başlıkları atla
+      const rows = text.split("\n").slice(1); 
       const newSets: WordSet[] = [];
 
       rows.forEach((row) => {
-        const [id, name, difficulty, english, turkish] = row.split(",");
+        const [id, name, english, turkish] = row.split(",");
         let existingSet = newSets.find((set) => set.id === id);
 
         if (!existingSet) {
-          existingSet = { id, name: name.replace(/"/g, ""), difficulty, words: [] };
+          existingSet = { id, name: name.replace(/"/g, ""), words: [] };
           newSets.push(existingSet);
         }
 

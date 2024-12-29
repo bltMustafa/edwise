@@ -54,7 +54,7 @@ const ManageSet: React.FC<ManageSetProps> = ({currentSet, wordSets, setWordSets,
     }
   }, [setWordSets]);
 
-  const handleDelete = (indexToRemove) => {
+  const handleDelete = (indexToRemove: number) => {
     const updatedWords = currentSet.words.filter((_, index) => index !== indexToRemove);
     const updatedSet = {...currentSet, words: updatedWords};
     const updatedWordSets = wordSets.map(set => (set.id === currentSet.id ? updatedSet : set));

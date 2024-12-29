@@ -92,13 +92,13 @@ const ResultsView: React.FC<ResultsViewProps> = ({gameState, setCurrentStep, cur
                 <Tag color={scoreInfo.color}>{scoreInfo.tag}</Tag>
               </Space>
             }
+            // @ts-ignore 
             type={scoreInfo.type}
             showIcon
             style={{marginBottom: 24}}
           />
         </div>
 
-        {/* Statistics */}
         <Row gutter={16} justify="center">
           <Col>
             <Statistic
@@ -125,7 +125,6 @@ const ResultsView: React.FC<ResultsViewProps> = ({gameState, setCurrentStep, cur
           </Col>
         </Row>
 
-        {/* Progress Circle */}
         <div style={{textAlign: "center", padding: "24px 0"}}>
           <Progress
             type="circle"
@@ -143,7 +142,6 @@ const ResultsView: React.FC<ResultsViewProps> = ({gameState, setCurrentStep, cur
 
         <Divider>Results</Divider>
 
-        {/* Word List */}
         <List
           dataSource={gameState.results}
           renderItem={(result) => (

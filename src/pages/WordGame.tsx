@@ -4,16 +4,17 @@ import SetsList from "../components/SetsList";
 import ManageSet from "../components/ManageSet";
 import PlayView from "../components/PlayView";
 import ResultsView from "../components/ResultsView";
-
+import {WordSet, GameState} from "../constants/types";
 
 const WordGame: React.FC = () => {
   const [wordSets, setWordSets] = useState<WordSet[]>([]);
   const [currentStep, setCurrentStep] = useState<"sets" | "manage" | "play" | "results">("sets");
   const [currentSet, setCurrentSet] = useState<WordSet | null>(null);
-  const [gameState, setGameState] = useState({
+  const [gameState, setGameState] = useState<GameState>({
     currentWordIndex: 0,
     userGuess: "",
-    results: [] as {word: Word; correct: boolean}[],
+    results: [],
+    shuffledWords: []
   });
 
   const getCardWidth = () => {
@@ -44,7 +45,7 @@ const WordGame: React.FC = () => {
       theme={{
         components: {
           Card: {
-            paddingLg: 24,
+            paddingLG: 24,
             borderRadiusLG: 16,
           },
         },
@@ -65,7 +66,7 @@ const WordGame: React.FC = () => {
             sm: "20px",
             md: "30px",
             lg: "40px",
-          },
+          } as any,
         }}
       >
         <Card

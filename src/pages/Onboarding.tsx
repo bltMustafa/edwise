@@ -1,4 +1,4 @@
-import React, {useState, FC} from "react";
+import {useState, FC} from "react";
 import {Steps, Button, Typography, Space, Row, Col} from "antd";
 import {BookOutlined, PlusCircleOutlined, RocketOutlined} from "@ant-design/icons";
 import "../styles/onboarding.css";
