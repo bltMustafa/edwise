@@ -19,7 +19,7 @@ interface SetsListProps {
 
 const SetsList: React.FC<SetsListProps> = ({wordSets, setWordSets, setCurrentSet, setCurrentStep}) => {
   const [newSetName, setNewSetName] = React.useState("");
-  const [newSetDifficulty, setNewSetDifficulty] = React.useState<"easy" | "medium" | "hard">("easy");
+
 
   useEffect(() => {
     const savedSets = localStorage.getItem("wordSets");
@@ -43,7 +43,6 @@ const SetsList: React.FC<SetsListProps> = ({wordSets, setWordSets, setCurrentSet
       id: Math.random().toString(36).substr(2, 9),
       name: newSetName.trim(),
       words: [],
-      difficulty: newSetDifficulty,
     };
 
     const updatedWordSets = [...wordSets, newSet];
@@ -64,16 +63,7 @@ const SetsList: React.FC<SetsListProps> = ({wordSets, setWordSets, setCurrentSet
             onChange={(e) => setNewSetName(e.target.value)}
             style={{width: 200}}
           />
-          <Select
-            defaultValue="easy"
-            value={newSetDifficulty}
-            style={{width: 120}}
-            onChange={(value) => setNewSetDifficulty(value as "easy" | "medium" | "hard")}
-          >
-            <Select.Option value="easy">Easy</Select.Option>
-            <Select.Option value="medium">Medium</Select.Option>
-            <Select.Option value="hard">Hard</Select.Option>
-          </Select>
+        
           <Button type="primary" icon={<PlusOutlined/>} onClick={addWordSet}>
             Add Set
           </Button>

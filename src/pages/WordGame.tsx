@@ -16,14 +16,13 @@ const WordGame: React.FC = () => {
     results: [] as {word: Word; correct: boolean}[],
   });
 
-  // Her görünüm için özel boyutlandırma
   const getCardWidth = () => {
     switch (currentStep) {
       case "results":
         return {
           width: "100%",
-          maxWidth: "1000px", // Results için daha geniş
-          minHeight: "700px",  // Minimum yükseklik
+          maxWidth: "1000px", 
+          minHeight: "700px",  
         };
       case "play":
         return {
@@ -56,7 +55,7 @@ const WordGame: React.FC = () => {
           background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed", // Arka plan sabit
+          backgroundAttachment: "fixed", 
           minHeight: "100vh",
           display: "flex",
           justifyContent: "center",
@@ -72,15 +71,15 @@ const WordGame: React.FC = () => {
         <Card
           style={{
             backdropFilter: "blur(10px)",
-            backgroundColor: "rgba(255, 255, 255, 0.95)", // Biraz daha opak
-            boxShadow: "0 12px 30px rgba(0,0,0,0.25)", // Daha belirgin gölge
+            backgroundColor: "rgba(255, 255, 255, 0.95)", 
+            boxShadow: "0 12px 30px rgba(0,0,0,0.25)", 
             borderRadius: 16,
             margin: "20px auto",
             transition: "all 0.3s ease",
             ...getCardWidth(),
           }}
           bodyStyle={{
-            padding: currentStep === "results" ? "32px" : "24px", // Results için daha fazla padding
+            padding: currentStep === "results" ? "32px" : "24px", 
             height: "100%",
             display: "flex",
             flexDirection: "column",
@@ -91,8 +90,8 @@ const WordGame: React.FC = () => {
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              overflow: "auto", // İçerik uzunsa scroll
-              maxHeight: currentStep === "results" ? "80vh" : "auto", // Results için max yükseklik
+              overflow: "auto", 
+              maxHeight: currentStep === "results" ? "80vh" : "auto", 
             }}
           >
             {currentStep === "sets" && (
